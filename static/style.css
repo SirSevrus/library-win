@@ -1,0 +1,194 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Rajdhani", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('https://cdn.wallpapersafari.com/22/87/5yW4Ng.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+}
+
+.header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    font-family: "Rubik Wet Paint", system-ui;
+    cursor: none;
+}
+
+.search-form {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
+.search-input {
+    width: 80%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    opacity: 0.6;
+    font-family: "Roboto Slab", serif;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.search-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 50px;
+}
+
+.book-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.book-item {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 5px;
+}
+
+.book-item:hover {
+    background-color: #31363F;
+}
+
+.book-link {
+    text-decoration: none;
+    color: #4CAF50;
+    opacity: 1;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #58fc5e;
+    font-weight: bold;
+}
+
+.input-field {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    font-family: "Roboto Slab", serif;
+    font-weight: bold;
+    opacity: 0.8;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 600px) {
+    .search-form {
+        flex-direction: column;
+    }
+    
+    .search-input {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .search-btn {
+        width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+.greeting {
+    font-family: "Rubik Wet Paint", system-ui;
+    cursor: none;
+    font-weight: bold;
+}
+
+.author {
+    color: white;
+    font-weight: bold;
+}
+
+label {
+    color: white;
+    font-family: "Rajdhani", sans-serif;
+    font-weight: bold;
+    font-weight: 15px;
+}
+#back-btn {
+    padding: 10px;
+}
+
+.reset-btn {
+    background-color: hsl(0, 94%, 48%);
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.reset-btn:hover {
+    background-color: #d43434;
+}
+
+.av-books {
+    color: white;
+    font-weight: bold;
+    border-bottom: 1px solid white;
+}
+
+.no-books-message {
+    color: hsl(0, 94%, 48%);
+}
+
+.add-book-btn {
+    text-align: left;
+    border: solid 1px black;
+    
+}
+
+#book-ico {
+    width: 40px;
+    height: 40px;
+    border-radius: 16px;
+}
+
+#issue {
+    border: 1px solid white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px;
+    text-align: right;
+}
+
+#issue:hover {
+    background-color: white;
+}

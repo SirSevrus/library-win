@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        canvas {
+            border: 1px solid black;
+            margin-top: 20px;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+        let pdfDoc = null,
+            currentPage = 1,
+            totalPages = 0;
+
+        async function loadPDF(url) {
+            try {
+                pdfDoc = await pdfjsLib.getDocument(url).promise;
+                totalPages = pdfDoc.numPages;
+                document.getElementById('totalPages').textContent = totalPages;
+                renderPage(currentPage);
+            } catch (error) {
+                console.error('Error loading PDF: ', error);
+            }
+        }
+
+        async function renderPage(num) {
+            const page = await pdfDoc.getPage(num);
+            const scale = 1.5;
+            const viewport = page.getViewport({ scale: scale });
+
+            const canvas = document.getElementById('pdf-canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            await page.render(renderContext).promise;
+        }
+
+        window.onload = function() {
+            const pdfUrl = '{{ pdf_url }}';  // Pass the URL of the PDF file from Flask
+            loadPDF(pdfUrl);
+        };
+    </script>
+</head>
+<body>
+    <h1>PDF Viewer</h1>
+    <div class="controls">
+        <button id="prev" class="btn" onclick="if (currentPage > 1) { currentPage--; renderPage(currentPage); }">Previous</button>
+        <button id="next" class="btn" onclick="if (currentPage < totalPages) { currentPage++; renderPage(currentPage); }">Next</button>
+        <span>Page <span id="currentPage">1</span> of <span id="totalPages">0</span></span>
+    </div>
+    <canvas id="pdf-canvas"></canvas>
+    <br>
+    <a href="{{ url_for('home') }}" class="btn">Back to Home</a>
+</body>
+</html>

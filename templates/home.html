@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="greeting">Welcome to the Digital Library</h1>
+            <p class="greeting">Coded By Sahil Gour ;)</p>
+            {% if can_add_book %}
+                <a href="{{ url_for('add_book') }}" class="btn add-book-btn">
+                    <i class="fas fa-plus"></i> Add a New Book
+                </a>
+            {% endif %}
+        </header>
+
+        <!-- Search Bar -->
+        <form action="{{ url_for('home') }}" method="get" class="search-form">
+            <input type="text" name="search" placeholder="Search for a book by title or author" class="search-input" value="{{ request.args.get('search', '') }}">
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i> Search
+            </button>
+            
+            <!-- Reset Button -->
+            {% if request.args.get('search') %}
+                <button type="button" class="reset-btn" onclick="resetSearch()">Reset</button>
+            {% endif %}
+        </form>
+        
+        <main>
+            <h2 class="av-books">Available Books 
+                {% if books %}
+                    ({{ books|length }} found)
+                {% else %}
+                    (0 found)
+                {% endif %}
+            </h2>
+            
+            {% if books %}
+                <ul class="book-list">
+                    {% for book in books %}
+                        <li class="book-item">
+                            <img src="{{ url_for('static', filename='book.png') }}" alt="" id="book-ico">
+                            <strong class="book-link">{{ book['title'] }}</strong>
+                            <span><p class="author">by {{ book['author'] }}</p></span>
+                            <a href="{{ url_for('view_book_pdf', checksum=book['checksum']) }}" target="_parent" class="book-link" id="issue">
+                                ISSUE NOW
+                            </a> 
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <!-- No books found message -->
+                <p class="no-books-message">No books found for your search.</p>
+            {% endif %}
+            
+           <!-- {% if can_add_book %}
+                <a href="{{ url_for('add_book') }}" class="btn add-book-btn">
+                    <i class="fas fa-plus"></i> Add a New Book
+                </a>
+            {% endif %} -->
+        </main>
+    </div>
+
+    <script>
+        function resetSearch() {
+            // Clear the search input value
+            const searchInput = document.querySelector('.search-input');
+            searchInput.value = '';
+            
+            // Reload the page without search parameters
+            window.location.href = "{{ url_for('home') }}";
+        }
+    </script>
+</body>
+</html>
