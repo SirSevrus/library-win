@@ -16,22 +16,22 @@
             <h1 class="greeting">Welcome to the Digital Library</h1>
             <p class="greeting">Coded By Sahil Gour ;)</p>
             {% if can_add_book %}
-                <a href="{{ url_for('add_book') }}" class="btn add-book-btn">
+                <a href="{{ url_for('add_book') }}" class="btn add-book-btn" aria-label="Add a new book">
                     <i class="fas fa-plus"></i> Add a New Book
                 </a>
             {% endif %}
         </header>
 
         <!-- Search Bar -->
-        <form action="{{ url_for('home') }}" method="get" class="search-form">
-            <input type="text" name="search" placeholder="Search for a book by title or author" class="search-input" value="{{ request.args.get('search', '') }}">
-            <button type="submit" class="search-btn">
+        <form action="{{ url_for('home') }}" method="get" class="search-form" aria-label="Search form">
+            <input type="text" name="search" placeholder="Search for a book by title or author" class="search-input" aria-label="Search input" value="{{ request.args.get('search', '') }}">
+            <button type="submit" class="search-btn" aria-label="Search button">
                 <i class="fas fa-search"></i> Search
             </button>
             
             <!-- Reset Button -->
             {% if request.args.get('search') %}
-                <button type="button" class="reset-btn" onclick="resetSearch()">Reset</button>
+                <button type="button" class="reset-btn" onclick="resetSearch()" aria-label="Reset search">Reset</button>
             {% endif %}
         </form>
         
@@ -48,35 +48,27 @@
                 <ul class="book-list">
                     {% for book in books %}
                         <li class="book-item">
-                            <img src="{{ url_for('static', filename='book.png') }}" alt="" id="book-ico">
-                            <strong class="book-link">{{ book['title'] }}</strong>
-                            <span><p class="author">by {{ book['author'] }}</p></span>
-                            <a href="{{ url_for('view_book_pdf', checksum=book['checksum']) }}" target="_parent" class="book-link" id="issue">
-                                ISSUE NOW
+                            <a href="{{ url_for('view_book_pdf', checksum=book['checksum']) }}" target="_parent" class="book-link">
+                                <strong>{{ book['title'] }}</strong>
                             </a> 
+                            <span><p class="author">by {{ book['author'] }}</p></span>
+                            <p class="desc">Description:</p>
+                            <p class="desc-cont">{{ book['description'] }}</p>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
                 <!-- No books found message -->
-                <p class="no-books-message">No books found for your search.</p>
+                <p class="no-books-message">No books found for your search. Try different keywords or check back later.</p>
             {% endif %}
             
-           <!-- {% if can_add_book %}
-                <a href="{{ url_for('add_book') }}" class="btn add-book-btn">
-                    <i class="fas fa-plus"></i> Add a New Book
-                </a>
-            {% endif %} -->
         </main>
     </div>
 
     <script>
         function resetSearch() {
-            // Clear the search input value
             const searchInput = document.querySelector('.search-input');
             searchInput.value = '';
-            
-            // Reload the page without search parameters
             window.location.href = "{{ url_for('home') }}";
         }
     </script>

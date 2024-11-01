@@ -41,7 +41,6 @@ body {
     opacity: 0.6;
     font-family: "Roboto Slab", serif;
     font-weight: bold;
-    font-size: 18px;
 }
 
 .search-btn {
@@ -147,6 +146,7 @@ label {
 .reset-btn {
     background-color: hsl(0, 94%, 48%);
     color: white;
+    border: none;
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 50px;
@@ -173,22 +173,15 @@ label {
     border: solid 1px black;
     
 }
-
-#book-ico {
-    width: 40px;
-    height: 40px;
-    border-radius: 16px;
-}
-
-#issue {
-    border: 1px solid white;
-    border-radius: 8px;
-    cursor: pointer;
+.desc {
+    color: white;
+    font-family: "Rajdhani", sans-serif;
+    font-size: 16px;
     font-weight: bold;
-    padding: 5px;
-    text-align: right;
 }
 
-#issue:hover {
-    background-color: white;
+.desc-cont {
+    color: #FEEC37;
+    font-family: "Roboto Slab", serif;
+    font-size: 13px;
 }
