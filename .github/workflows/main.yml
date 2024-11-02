@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # Change to use a Windows runner
 
     steps:
       - name: Checkout code
@@ -27,15 +27,16 @@ jobs:
       - name: Build executable
         run: |
           pyinstaller Library.spec  # Use the .spec file to build the executable
-          cd dist && mv Library Library.exe && cd ..
+          move dist\Library.exe .  # Move the executable to the root directory
+
       - name: Commit executable
         run: |
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
           git pull
-          git add .
-          git lfs track "*.exe"
-          git commit -m "Library.exe-v1.21"
+          git add Library.exe  # Add the generated executable
+          git lfs track "*.exe"  # Track .exe files with Git LFS
+          git commit -m "Add Library.exe v1.21"  # Commit the executable
           git push origin main  # Push back to the main branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
