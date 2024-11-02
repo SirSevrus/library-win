@@ -4,6 +4,7 @@ from cryptography.fernet import Fernet
 from flask_talisman import Talisman
 import mysql.connector as mysql
 import hashlib
+import logging
 import signal
 import shutil
 import json
@@ -37,15 +38,10 @@ fileDir = os.path.join(BASE_DIR, 'files')
 KEY_FILE_PATH = os.path.join(BASE_DIR, 'key.dat')
 CONFIG_FILE_PATH = os.path.join(BASE_DIR, 'config.json')
 
+logging.basicConfig(level=logging.INFO, filename=os.path.join(BASE_DIR, 'runtime.log'), filemode='a', 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
 opened = False
-
-# Function to create required directories if they do not exist
-def initialize_directories(dirs):
-    for dir in dirs:
-        os.makedirs(dir, exist_ok=True)
-        print(f"[INFO] Ensured directory exists: {dir}")
-
-initialize_directories([BASE_DIR, fileDir])
 
 def generate_key_file():
     """Generate encryption key and save encrypted password to key.dat if not exists."""
@@ -101,6 +97,26 @@ generate_config_file()
 
 # Load configuration on startup
 config = load_config()
+
+# Function to create required directories if they do not exist
+def initialize_directories_and_tables(dirs):
+    for dir in dirs:
+        os.makedirs(dir, exist_ok=True)
+        print(f"[INFO] Ensured directory exists: {dir}")
+    connection = mysql.connect(**config)
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS books (
+    id VARCHAR(255) NOT NULL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    description TEXT,
+    author VARCHAR(255),
+    checksum CHAR(64)
+)
+    """)
+    connection.commit()
+    connection.close()
 
 def check_connection():
     """Check MySQL connection."""
@@ -242,10 +258,11 @@ def request_entity_too_large(error):
 
 if __name__ == '__main__':
     if check_connection():
+        initialize_directories_and_tables([BASE_DIR, fileDir])
         print("[INFO] MySQL connection successful.")
         webbrowser.open_new_tab('http://localhost:9090/')
         if opened == False:
-            app.run(host="127.0.0.1", port=9090, debug=True)
+            app.run(host="127.0.0.1", port=9090, debug=False)
             opened = True
     else:
         print("[ERROR] Could not establish MySQL connection.")
