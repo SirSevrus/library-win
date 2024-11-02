@@ -26,15 +26,15 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller app.spec  # Use the .spec file to build the executable
-          mv dist/app ./app.exe  # Rename if necessary, adjust according to your script
+          pyinstaller Library.spec  # Use the .spec file to build the executable
+          mv dist/app ./Library.exe  # Rename if necessary, adjust according to your script
 
       - name: Commit executable
         run: |
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
           git add app.exe
-          git commit -m "Add generated executable"
+          git commit -m "Library.exe-v1.21"
           git push origin main  # Push back to the main branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
