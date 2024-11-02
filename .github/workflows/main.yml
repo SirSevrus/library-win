@@ -26,6 +26,7 @@ jobs:
 
       - name: Build executable
         run: |
+          tree
           pyinstaller Library.spec  # Use the .spec file to build the executable
           move dist\Library.exe .  # Move the executable to the root directory
 
