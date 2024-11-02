@@ -27,7 +27,7 @@ jobs:
       - name: Build executable
         run: |
           pyinstaller Library.spec  # Use the .spec file to build the executable
-
+          cd dist && mv Library Library.exe && cd ..
       - name: Commit executable
         run: |
           git config --local user.name "GitHub Action"
