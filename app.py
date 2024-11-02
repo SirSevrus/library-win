@@ -38,9 +38,6 @@ fileDir = os.path.join(BASE_DIR, 'files')
 KEY_FILE_PATH = os.path.join(BASE_DIR, 'key.dat')
 CONFIG_FILE_PATH = os.path.join(BASE_DIR, 'config.json')
 
-logging.basicConfig(level=logging.INFO, filename=os.path.join(BASE_DIR, 'runtime.log'), filemode='a', 
-                    format='%(asctime)s - %(levelname)s - %(message)s')
-
 opened = False
 
 def generate_key_file():
@@ -259,6 +256,8 @@ def request_entity_too_large(error):
 if __name__ == '__main__':
     if check_connection():
         initialize_directories_and_tables([BASE_DIR, fileDir])
+        logging.basicConfig(level=logging.INFO, filename=os.path.join(BASE_DIR, 'runtime.log'), filemode='a', 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
         print("[INFO] MySQL connection successful.")
         webbrowser.open_new_tab('http://localhost:9090/')
         if opened == False:
