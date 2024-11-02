@@ -32,7 +32,7 @@ jobs:
         run: |
           git config --local user.name "GitHub Action"
           git config --local user.email "action@github.com"
-          git add app.exe
+          git add dist/Library.exe
           git commit -m "Library.exe-v1.21"
           git push origin main  # Push back to the main branch
         env:
