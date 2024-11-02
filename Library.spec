@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,  # Architecture target (e.g., 'x86_64')
     codesign_identity=None,  # Codesign identity for macOS
     entitlements_file=None,  # Entitlements file for macOS
-    icon="C:\\Users\\sahil\\workspace\\library-win\\favicon.ico",  # Specify the path to your .ico file
+    icon="C:\\Users\\sahil\\workspace\\library-win\\static\\favicon.ico",  # Specify the path to your .ico file
 )

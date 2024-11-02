@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Server</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='settingStyle.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="greeting">Stop the Server</h1>
+            <p class="greeting">Are you sure you want to stop the server?</p>
+        </header>
+        
+        <main>
+            <div class="confirmation">
+                <button class="btn stop-server-btn" onclick="confirmStop()" aria-label="Confirm stop server">
+                    <i class="fas fa-power-off"></i> Yes, Stop Server
+                </button>
+                <button class="btn cancel-btn" onclick="cancelStop()" aria-label="Cancel stop server">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+            <p id="message" class="hidden"></p> <!-- Hidden message paragraph -->
+        </main>
+    </div>
+
+    <script>
+        function confirmStop() {
+            if (confirm("Are you absolutely sure you want to stop the server? This action cannot be undone.")) {
+                fetch("{{ url_for('shutdown') }}", { method: 'POST' })
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById('message').textContent = "Server close is requested. It will stop automatically. You can close this window.";
+                            document.getElementById('message').classList.remove('hidden'); // Show message
+                        } else {
+                            // If the response is not okay, just show a message
+                            document.getElementById('message').textContent = "An error occurred while trying to stop the server. Please try again.";
+                            document.getElementById('message').classList.remove('hidden'); // Show message
+                        }
+                    })
+                    .catch(() => {
+                        // Handle network errors or any other fetch errors
+                        document.getElementById('message').textContent = "Server close is requested. It will stop automatically. You can close this window.";
+                        document.getElementById('message').classList.remove('hidden'); // Show message
+                    });
+            }
+        }
+
+        function cancelStop() {
+            alert("Server stop action has been cancelled.");
+            window.location.href = "{{ url_for('home') }}"; // Redirect to home or previous page
+        }
+    </script>
+    
+    <style>
+        .hidden {
+            display: none;
+        }
+        
+        #message {
+            margin-top: 1rem;
+            color: #ffdd57; /* Color for the message */
+            text-align: center;
+            font-size: 1.2rem;
+        }
+    </style>
+</body>
+</html>

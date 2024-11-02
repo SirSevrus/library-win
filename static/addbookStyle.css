@@ -1,0 +1,97 @@
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background-color: #f7fafc; /* Light background color matching home.html */
+    color: #2d3748; /* Dark text color */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: white; /* White card background */
+    border-radius: 8px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    animation: fadeIn 0.5s ease-in-out; /* Fade-in animation */
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px; /* Space below header */
+}
+
+.header h1 {
+    margin-bottom: 10px;
+    font-size: 2em; /* Larger font for heading */
+    color: #4a5568; /* Dark gray for headings */
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-bottom: 10px;
+}
+
+.input-field {
+    padding: 10px;
+    margin-top: 5px;
+    border: 2px solid #e2e8f0; /* Light gray border */
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+.input-field:focus {
+    border-color: #63b3ed; /* Blue accent on focus */
+    outline: none; /* Remove default outline */
+}
+
+.btn {
+    padding: 12px 20px; /* Button padding */
+    margin-top: 15px; /* Space above button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #4a90e2; /* Blue background color */
+    color: white; /* White text */
+    font-size: 1.1em; /* Slightly larger font */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s, transform 0.3s; /* Transition effects */
+}
+
+.btn:hover {
+    background-color: #3b7dd8; /* Darker blue on hover */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+.back-btn {
+    background-color: #edf2f7; /* Light gray */
+    color: #2d3748; /* Dark text */
+    text-decoration: none; /* Remove underline */
+    text-align: center; /* Center the text */
+    padding: 10px 15px; /* Padding for back button */
+    border-radius: 5px; /* Rounded corners */
+    display: inline-block; /* Block for padding to work */
+    transition: background-color 0.3s; /* Transition for hover */
+}
+
+.back-btn:hover {
+    background-color: #e2e8f0; /* Slightly darker gray on hover */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start from invisible */
+    }
+    to {
+        opacity: 1; /* Fade to visible */
+    }
+}
+
+/* Icon styles */
+label i {
+    margin-right: 8px; /* Space between icon and text */
+    color: #4a90e2; /* Match the button color */
+}

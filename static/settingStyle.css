@@ -1,0 +1,75 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: all 0.3s ease;
+}
+
+body {
+    font-family: "Rajdhani", sans-serif;
+    background: linear-gradient(to right, #1e3c72, #2a69ac);
+    color: #ffffff;
+}
+
+.container {
+    width: 90%;
+    max-width: 500px;
+    margin: auto;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.greeting {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.confirmation {
+    display: flex;
+    justify-content: space-around;
+}
+
+.btn {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn i {
+    margin-right: 0.5rem;
+}
+
+.btn:hover {
+    background-color: #ff6b81;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.cancel-btn {
+    background-color: #2ecc71; /* Green color for cancel */
+}
+
+.cancel-btn:hover {
+    background-color: #4cd137; /* Darker green on hover */
+}
+
+@media (max-width: 600px) {
+    .btn {
+        flex: 1; /* Allow buttons to take equal space */
+        margin: 0.5rem;
+    }
+}

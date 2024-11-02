@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='Homestyle.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,20 +16,23 @@
             <h1 class="greeting">Welcome to the Digital Library</h1>
             <p class="greeting">Coded By Sahil Gour ;)</p>
             {% if can_add_book %}
-                <a href="{{ url_for('add_book') }}" class="btn add-book-btn" aria-label="Add a new book">
-                    <i class="fas fa-plus"></i> Add a New Book
-                </a>
+                <div class="btn-group">
+                    <a href="{{ url_for('add_book') }}" class="btn add-book-btn" aria-label="Add a new book">
+                        <i class="fas fa-plus"></i> Add a New Book
+                    </a>
+                    <a href="{{ url_for('settings') }}" class="btn stop-server-btn" aria-label="Stop Server">
+                        <i class="fas fa-stop-circle"></i> Stop Server
+                    </a>
+                </div>
             {% endif %}
         </header>
 
         <!-- Search Bar -->
         <form action="{{ url_for('home') }}" method="get" class="search-form" aria-label="Search form">
             <input type="text" name="search" placeholder="Search for a book by title or author" class="search-input" aria-label="Search input" value="{{ request.args.get('search', '') }}">
-            <button type="submit" class="search-btn" aria-label="Search button">
-                <i class="fas fa-search"></i> Search
+            <button type="submit" class="search-btn" aria-label="Search button">Search
+                <i class="fas fa-search"></i>
             </button>
-            
-            <!-- Reset Button -->
             {% if request.args.get('search') %}
                 <button type="button" class="reset-btn" onclick="resetSearch()" aria-label="Reset search">Reset</button>
             {% endif %}
@@ -58,10 +61,8 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <!-- No books found message -->
                 <p class="no-books-message">No books found for your search. Try different keywords or check back later.</p>
             {% endif %}
-            
         </main>
     </div>
 

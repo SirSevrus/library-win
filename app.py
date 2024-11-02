@@ -4,8 +4,10 @@ from cryptography.fernet import Fernet
 from flask_talisman import Talisman
 import mysql.connector as mysql
 import hashlib
+import signal
 import shutil
 import json
+import webbrowser
 import os
 import pickle
 import tempfile
@@ -17,11 +19,12 @@ app = Flask(__name__)
 # Content Security Policy
 csp = {
     'default-src': ["'self'"],
-    'script-src': ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net"],
-    'style-src': ["'self'", "https://fonts.googleapis.com"],
+    'script-src': ["'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "'unsafe-inline'"],
+    'style-src': ["'self'", "https://fonts.googleapis.com", "'unsafe-inline'"],
     'img-src': ["'self'", "data:", "https://cdn.wallpapersafari.com"],
     'font-src': ["'self'", "https://fonts.gstatic.com"],
 }
+
 Talisman(app, content_security_policy=csp, force_https=False)
 
 app.secret_key = os.environ.get('SECRET_KEY', 'myappsSecretKey129489585675964872568423572896fycbmdfhdjgfk')
@@ -33,6 +36,8 @@ BASE_DIR = os.path.join(os.getenv("APPDATA"), 'library')
 fileDir = os.path.join(BASE_DIR, 'files')
 KEY_FILE_PATH = os.path.join(BASE_DIR, 'key.dat')
 CONFIG_FILE_PATH = os.path.join(BASE_DIR, 'config.json')
+
+opened = False
 
 # Function to create required directories if they do not exist
 def initialize_directories(dirs):
@@ -119,6 +124,10 @@ def calculate_checksum(file_path):
 def page_not_found(e):
     return render_template('unknown_request.html'), 404
 
+@app.route('/home')
+def index():
+    return redirect(url_for('home'))
+
 @app.route('/')
 def home():
     search_query = request.args.get('search', '').strip()
@@ -204,6 +213,24 @@ def view_book_pdf(checksum):
         flash(f"[ERROR] Could not open book: {e}")
         return redirect(url_for('docNotFound'))
 
+def terminate_self():
+    pid = os.getpid()  # Get current process ID
+    print(f"Terminating process with PID: {pid}")
+    os.kill(pid, signal.SIGTERM)
+
+@app.route('/settings')
+def settings():
+    return render_template('shutdown.html')
+
+@app.route('/shutdown', methods=["POST"])
+def shutdown():
+    client_ip = request.remote_addr
+    if client_ip in allowed_ips:
+        terminate_self()
+        return "<h1>Shutting Down</h1>"
+    else:
+        return "Unauthorized", 403
+
 @app.route('/DocumentNotFound')
 def docNotFound():
     return render_template('docNotFound.html')
@@ -216,6 +243,9 @@ def request_entity_too_large(error):
 if __name__ == '__main__':
     if check_connection():
         print("[INFO] MySQL connection successful.")
-        app.run(host="0.0.0.0", port=9090, debug=False)
+        webbrowser.open_new_tab('http://localhost:9090/')
+        if opened == False:
+            app.run(host="127.0.0.1", port=9090, debug=True)
+            opened = True
     else:
         print("[ERROR] Could not establish MySQL connection.")
