@@ -27,7 +27,6 @@ jobs:
       - name: Build executable
         run: |
           pyinstaller Library.spec  # Use the .spec file to build the executable
-          mv dist/app ./Library.exe  # Rename if necessary, adjust according to your script
 
       - name: Commit executable
         run: |
