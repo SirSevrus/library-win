@@ -216,6 +216,6 @@ def request_entity_too_large(error):
 if __name__ == '__main__':
     if check_connection():
         print("[INFO] MySQL connection successful.")
-        app.run(host="0.0.0.0", port=80, debug=False)
+        app.run(host="0.0.0.0", port=9090, debug=False)
     else:
         print("[ERROR] Could not establish MySQL connection.")
