@@ -18,7 +18,7 @@ missing module named winreg - imported by importlib._bootstrap_external (conditi
 missing module named nt - imported by os (delayed, conditional, optional), ntpath (optional), shutil (conditional), importlib._bootstrap_external (conditional)
 missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional)
 excluded module named _frozen_importlib - imported by importlib (optional), importlib.abc (optional)
-missing module named _winapi - imported by ntpath (optional), encodings (delayed, conditional, optional), shutil (conditional), subprocess (conditional)
+missing module named _winapi - imported by encodings (delayed, conditional, optional), ntpath (optional), shutil (conditional), subprocess (conditional)
 missing module named msvcrt - imported by subprocess (optional)
 missing module named mysql - imported by /home/runner/work/library-win/library-win/app.py (top-level)
 missing module named flask_talisman - imported by /home/runner/work/library-win/library-win/app.py (top-level)
