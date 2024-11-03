@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for, flash, sen
 from werkzeug.utils import secure_filename
 from cryptography.fernet import Fernet
 from flask_talisman import Talisman
-import mysql.connector as mysql
+import sqlite3
 import hashlib
 import logging
 import signal
@@ -35,10 +35,9 @@ app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # 500 MB
 # Define base directories for the application
 BASE_DIR = os.path.join(os.getenv("APPDATA"), 'library')
 fileDir = os.path.join(BASE_DIR, 'files')
+DB_FILE_PATH = os.path.join(BASE_DIR, 'db', 'library.db')
 KEY_FILE_PATH = os.path.join(BASE_DIR, 'key.dat')
 CONFIG_FILE_PATH = os.path.join(BASE_DIR, 'config.json')
-
-opened = False
 
 def generate_key_file():
     """Generate encryption key and save encrypted password to key.dat if not exists."""
@@ -58,9 +57,7 @@ def generate_config_file():
     if not os.path.exists(CONFIG_FILE_PATH):
         print("Configuration file not found. Creating a new one.")
         config = {
-            'host': input("Enter MySQL host (e.g., 'localhost'): "),
-            'user': input("Enter MySQL username: "),
-            'database': input("Enter MySQL database name: ")
+            'database': DB_FILE_PATH  # SQLite database path
         }
         with open(CONFIG_FILE_PATH, "w") as file:
             json.dump(config, file)
@@ -82,47 +79,41 @@ def load_config():
     try:
         with open(CONFIG_FILE_PATH) as file:
             config = json.load(file)
-            config["password"] = load_key()
+            config["password"] = load_key()  # Password is not used in SQLite
             return config
     except Exception as e:
         print(f"[ERROR] Could not load config: {e}")
         return None
 
-# Generate key and config files if they don't exist
-generate_key_file()
-generate_config_file()
-
-# Load configuration on startup
-config = load_config()
-
 # Function to create required directories if they do not exist
-def initialize_directories_and_tables(dirs):
+def initialize_directories(dirs):
     for dir in dirs:
         os.makedirs(dir, exist_ok=True)
         print(f"[INFO] Ensured directory exists: {dir}")
-    connection = mysql.connect(**config)
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS books (
-    id VARCHAR(255) NOT NULL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    path VARCHAR(255) NOT NULL,
-    description TEXT,
-    author VARCHAR(255),
-    checksum CHAR(64)
-)
-    """)
+
+def create_tables():
+    """Create the books table in SQLite database."""
+    connection = sqlite3.connect(DB_FILE_PATH)
+    cursor = connection.cursor()
+    cursor.execute("""CREATE TABLE IF NOT EXISTS books (
+        id TEXT NOT NULL PRIMARY KEY,
+        title TEXT NOT NULL,
+        path TEXT NOT NULL,
+        description TEXT,
+        author TEXT,
+        checksum TEXT
+    )""")
     connection.commit()
     connection.close()
 
 def check_connection():
-    """Check MySQL connection."""
+    """Check SQLite connection."""
     try:
-        conn = mysql.connect(**config)
+        conn = sqlite3.connect(DB_FILE_PATH)
         conn.close()
         return True
-    except mysql.Error as e:
-        print(f"[ERROR] MySQL connection error: {e}")
+    except sqlite3.Error as e:
+        print(f"[ERROR] SQLite connection error: {e}")
         return False
 
 # Calculate SHA-256 checksum for file
@@ -145,20 +136,31 @@ def index():
 def home():
     search_query = request.args.get('search', '').strip()
     client_ip = request.remote_addr
-    connection = mysql.connect(**config)
-    cursor = connection.cursor(dictionary=True)
+    connection = sqlite3.connect(DB_FILE_PATH)
+    cursor = connection.cursor()
     
     if search_query:
-        cursor.execute("SELECT * FROM books WHERE title LIKE %s OR author LIKE %s", 
+        cursor.execute("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?", 
                        (f"%{search_query}%", f"%{search_query}%"))
     else:
         cursor.execute("SELECT * FROM books")
     
-    books = cursor.fetchall()
+    raw_books = cursor.fetchall()
+    books = []
+    for row in raw_books:
+        book_dict = {
+            'id': row[0],
+            'title': row[1],
+            'path': row[2],
+            'description': row[3],
+            'author': row[4],
+            'checksum': row[5]
+        }
+        books.append(book_dict)
+        
     cursor.close()
     connection.close()
     can_add_book = client_ip in allowed_ips
-
     return render_template('home.html', books=books, can_add_book=can_add_book)
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -186,15 +188,15 @@ def add_book():
                 shutil.move(temp_file_path, final_file_path)
                 shutil.rmtree(temp_dir)
                 
-                conn = mysql.connect(**config)
-                cursor = conn.cursor()
+                connection = sqlite3.connect(DB_FILE_PATH)
+                cursor = connection.cursor()
                 cursor.execute(
-                    "INSERT INTO books (id, title, path, description, author, checksum) VALUES (%s, %s, %s, %s, %s, %s)",
+                    "INSERT INTO books (id, title, path, description, author, checksum) VALUES (?, ?, ?, ?, ?, ?)",
                     (checksum, title, final_file_path, description, author, checksum)
                 )
-                conn.commit()
+                connection.commit()
                 cursor.close()
-                conn.close()
+                connection.close()
                 
                 flash("Book added successfully!")
                 return redirect(url_for('home'))
@@ -210,15 +212,15 @@ def add_book():
 @app.route('/view/<checksum>')
 def view_book_pdf(checksum):
     try:
-        conn = mysql.connect(**config)
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM books WHERE checksum = %s", (checksum,))
+        connection = sqlite3.connect(DB_FILE_PATH)
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM books WHERE checksum = ?", (checksum,))
         book = cursor.fetchone()
         cursor.close()
-        conn.close()
+        connection.close()
         
         if book:
-            return send_file(book['path'], as_attachment=False)
+            return send_file(book[2], as_attachment=False)  # book[2] is the path
         else:
             flash("Book not found.")
             return redirect(url_for('docNotFound'))
@@ -254,14 +256,26 @@ def request_entity_too_large(error):
     return redirect(url_for('add_book'))
 
 if __name__ == '__main__':
+    initialize_directories([BASE_DIR, fileDir, os.path.dirname(DB_FILE_PATH)])
+    generate_key_file()
+    generate_config_file()
+    
+    config = load_config()
+    if not config:
+        print("[ERROR] Failed to load configuration. Please check your config.json and key.dat files.")
+        exit(1)
+    
+    create_tables()
+    
     if check_connection():
-        initialize_directories_and_tables([BASE_DIR, fileDir])
-        logging.basicConfig(level=logging.INFO, filename=os.path.join(BASE_DIR, 'runtime.log'), filemode='a', 
-                    format='%(asctime)s - %(levelname)s - %(message)s')
-        print("[INFO] MySQL connection successful.")
-        webbrowser.open_new_tab('http://localhost:9090/')
-        if opened == False:
-            app.run(host="127.0.0.1", port=9090, debug=False)
-            opened = True
+        logging.basicConfig(
+            level=logging.INFO,
+            filename=os.path.join(BASE_DIR, 'runtime.log'),
+            filemode='a',
+            format='%(asctime)s - %(levelname)s - %(message)s'
+        )
+        print("[INFO] Starting server on http://localhost:9090")
+        webbrowser.open_new_tab("http://localhost:9090")
+        app.run(host="localhost", port=9090, debug=True)
     else:
-        print("[ERROR] Could not establish MySQL connection.")
+        print("[ERROR] Could not establish database connection.")

@@ -2,4 +2,3 @@ Flask
 Werkzeug
 cryptography
 flask-talisman
-mysql-connector-python
