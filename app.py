@@ -276,6 +276,6 @@ if __name__ == '__main__':
         )
         print("[INFO] Starting server on http://localhost:9090")
         webbrowser.open_new_tab("http://localhost:9090")
-        app.run(host="localhost", port=9090, debug=True)
+        app.run(host="localhost", port=9090, debug=False)
     else:
         print("[ERROR] Could not establish database connection.")
