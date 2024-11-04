@@ -1,3 +1,4 @@
+![](https://raw.githubusercontent.com/SirSevrus/library-win/refs/heads/main/static/favicon.ico)
 # Library Management System
 
 A web-based library management system built with Flask, designed to facilitate the management and distribution of e-books. This application allows users to add, search, and download books securely.
@@ -16,7 +17,7 @@ A web-based library management system built with Flask, designed to facilitate t
 ## Technologies Used
 
 - **Backend**: Python, Flask
-- **Database**: MySQL
+- **Database**: SQLITE3
 - **Encryption**: Fernet from the Cryptography library
 - **Web Security**: Flask-Talisman for enhanced security
 - **Frontend**: HTML, CSS (responsive design)
@@ -27,7 +28,6 @@ A web-based library management system built with Flask, designed to facilitate t
 ### Prerequisites
 
 - Python 3.x
-- MySQL Server
 - Required Python packages (listed in requirements.txt)
 
 ### Installation
@@ -44,28 +44,22 @@ A web-based library management system built with Flask, designed to facilitate t
    ```bash
    pip install -r requirements.txt
    ```
-
-3. Set up the MySQL database:
-   - Create a new database and user in MySQL.
-   - Configure the database settings in the `config.json` file based on your MySQL setup.
-
-4. Run the application:
+   
+3. Run the application:
 
    ```bash
    python app.py
    ```
-
-5. Open your browser and navigate to `http://localhost:9090/`.
+4. For windows:
+   just run the executable directly.
 
 ### Configuration
-
-- **Configuration File**: Update `config.json` to include your MySQL host, user, and database name.
 - **Encryption Key**: The application will prompt you to set up an encryption password for securing sensitive data.
 
 ### Security Considerations
 
 - Use a strong, unique password for the database encryption.
-- Ensure that the `allowed_ips` list in the application only includes trusted IPs.
+- Only localhost or 127.0.0.1 is allowed to add books.
 - Regularly update your dependencies to patch security vulnerabilities.
 
 ## Usage
@@ -73,10 +67,11 @@ A web-based library management system built with Flask, designed to facilitate t
 - **Adding a Book**: Click the "Add Book" link, fill out the form with the book title, author, description, and upload the PDF file.
 - **Searching for Books**: Use the search bar to filter books by title or author.
 - **Downloading Books**: Click on a book title to download the PDF file securely.
+- **Managing Books**: **This feature is currently Unavailable, it will be added soon.**
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
