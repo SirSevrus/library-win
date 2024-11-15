@@ -227,6 +227,61 @@ def view_book_pdf(checksum):
     except Exception as e:
         flash(f"[ERROR] Could not open book: {e}")
         return redirect(url_for('docNotFound'))
+    
+@app.route('/manage', methods=['GET', 'POST'])
+def manage_books():
+    client_ip = request.remote_addr
+    if client_ip not in allowed_ips:
+        flash("You are not authorized to access this page.")
+        return render_template('notallowed.html')
+
+    connection = sqlite3.connect(DB_FILE_PATH)
+    cursor = connection.cursor()
+
+    # Delete book if delete request is made
+    if request.method == 'POST':
+        book_id = request.form.get("book_id")
+        if book_id:
+            cursor.execute("SELECT * FROM books WHERE id = ?", (book_id,))
+            book = cursor.fetchone()
+            
+            if book:
+                # Delete book record from database
+                cursor.execute("DELETE FROM books WHERE id = ?", (book_id,))
+                connection.commit()
+
+                # Delete associated PDF file from the filesystem
+                pdf_path = book[2]  # book[2] contains the path to the PDF file
+                print(pdf_path)
+                try:
+                    os.remove(pdf_path)
+                    flash("Book and its PDF deleted successfully!")
+                except:
+                    print("[ERROR] Either the book wasn't found or any kind of permission error!")
+                    flash("PDF file not found, but database record deleted.")
+
+            else:
+                flash("Book not found in database.")
+
+        else:
+            flash("Invalid book ID. Please try again.")
+
+    # Fetch all books
+    cursor.execute("SELECT * FROM books")
+    raw_books = cursor.fetchall()
+    books = [{
+        'id': row[0],
+        'title': row[1],
+        'path': row[2],
+        'description': row[3],
+        'author': row[4],
+        'checksum': row[5]
+    } for row in raw_books]
+
+    cursor.close()
+    connection.close()
+
+    return render_template("manage.html", books=books)
 
 def terminate_self():
     pid = os.getpid()  # Get current process ID

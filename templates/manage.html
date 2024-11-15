@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Book</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='addbookStyle.css') }}">
+    <title>Manage Books</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='manageStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='icon.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&family=Rubik+Wet+Paint&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="fixed-icon">
@@ -24,36 +20,26 @@
     </div>    
     <div class="container">
         <header class="header">
-            <h1>Add a New Book to the Collection</h1>
+            <h1>Manage Books</h1>
+            <a href="{{ url_for('home') }}" class="btn back-home-btn">Back to Home</a>
         </header>
         
-        <main>
-            <form method="post" enctype="multipart/form-data" class="form">
-                <label>
-                    <i class="fas fa-book"></i> Title: 
-                    <input type="text" name="title" required class="input-field">
-                </label><br>
-                <label>
-                    <i class="fas fa-file-alt"></i> Description: 
-                    <input type="text" name="description" required class="input-field">
-                </label><br>
-                <label>
-                    <i class="fas fa-user"></i> Author: 
-                    <input type="text" name="author" required class="input-field">
-                </label><br>
-                <label>
-                    <i class="fas fa-file-pdf"></i> PDF: 
-                    <input type="file" name="file" accept=".pdf" required class="input-field">
-                </label><br>
-                <button type="submit" class="btn submit-btn">
-                    <i class="fas fa-plus-circle"></i> Add Book
-                </button>
-            </form>
-        </main>
-        <p></p>
-        <a href="{{ url_for('home') }}" id="back-btn" class="btn back-btn">
-            <i class="fas fa-arrow-left"></i> Back to Home
-        </a>
+        {% if books %}
+            <ul class="book-list">
+                {% for book in books %}
+                    <li class="book-item">
+                        <strong>{{ book['title'] }}</strong> by {{ book['author'] }}
+                        <p>Description: {{ book['description'] }}</p>
+                        <form action="{{ url_for('manage_books') }}" method="post" class="delete-form">
+                            <input type="hidden" name="book_id" value="{{ book['id'] }}">
+                            <button type="submit" class="btn delete-btn">Delete</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-books-message">No books available to manage.</p>
+        {% endif %}
     </div>
 </body>
 </html>

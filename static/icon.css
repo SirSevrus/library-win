@@ -1,0 +1,28 @@
+.fixed-icon {
+    position: fixed;
+    top: 0px;     /* Distance from the top of the page */
+    right: 23px;   /* Distance from the right side of the page */
+    z-index: 1000; /* Ensures it stays on top of other elements */
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+/* Optional: Style the SVG for color and size */
+.git-icon {
+    fill: #010101; /* GitHub icon color */
+    width: 64px;   /* Adjust width as needed */
+    height: 64px;  /* Adjust height as needed */
+}
+
+.hid-msg {
+    color: #6495ED;
+    font-weight: bold;
+    opacity: 0;
+}
+
+.fixed-icon:hover {
+    .hid-msg {
+        opacity: 1;
+    }
+    transform: scale(1.1); /* Slight enlargement on hover */
+}

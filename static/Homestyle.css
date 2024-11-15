@@ -42,6 +42,7 @@ body {
     font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
     transition: background-color 0.3s, transform 0.2s;
 }
 
@@ -177,4 +178,20 @@ main {
     .av-books {
         font-size: 1.5rem;
     }
+}
+
+.author-link {
+    text-decoration: none;
+    color: #6495ED;
+    font-weight: bold;
+    border: 1px solid #6495ED;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.author-link:hover {
+    background-color: #6495ED;
+    color: white;
+    transition: background-color 0.3s, transform 0.2s;
 }
