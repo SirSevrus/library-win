@@ -67,7 +67,7 @@ A web-based library management system built with Flask, designed to facilitate t
 - **Adding a Book**: Click the "Add Book" link, fill out the form with the book title, author, description, and upload the PDF file.
 - **Searching for Books**: Use the search bar to filter books by title or author.
 - **Downloading Books**: Click on a book title to download the PDF file securely.
-- **Managing Books**: **This feature is currently Unavailable, it will be added soon.**
+- **Managing Books**: [Available From Version 1.25](https://github.com/SirSevrus/library-win/releases/tag/%231.25)
 
 ## License
 
