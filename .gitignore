@@ -1,6 +1,6 @@
 .spec
 .log
 .pyd
-_internal
+_internal/
 .pyc
 .exe
