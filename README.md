@@ -1,6 +1,7 @@
 ![](https://raw.githubusercontent.com/SirSevrus/library-win/refs/heads/main/static/favicon.ico)
 # Library Management System
-
+[Download Now](https://github.com/SirSevrus/library-win/releases/tag/%23installer-1.0)
+ 
 A web-based library management system built with Flask, designed to facilitate the management and distribution of e-books. This application allows users to add, search, and download books securely.
 
 ## Features
