@@ -1,5 +1,4 @@
 .spec
-.log
 .pyd
 _internal/
 .pyc
